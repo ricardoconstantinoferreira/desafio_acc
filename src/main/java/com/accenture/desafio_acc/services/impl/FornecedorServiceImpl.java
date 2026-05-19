@@ -2,6 +2,7 @@ package com.accenture.desafio_acc.services.impl;
 
 import com.accenture.desafio_acc.dto.FornecedorDto;
 import com.accenture.desafio_acc.entity.Fornecedor;
+import com.accenture.desafio_acc.exception.DocumentoExisteException;
 import com.accenture.desafio_acc.repository.EmpresaRepository;
 import com.accenture.desafio_acc.repository.FornecedorRepository;
 import com.accenture.desafio_acc.services.FornecedorService;
@@ -24,6 +25,11 @@ public class FornecedorServiceImpl implements FornecedorService {
 
     @Override
     public FornecedorDto create(FornecedorDto fornecedorDto) {
+
+        if (existsByDocumento(fornecedorDto.getDocumento())) {
+            throw new DocumentoExisteException("Erro: Documento (CPF/CNPJ) já consta na nossa base de dados.");
+        }
+
         Fornecedor fornecedor = toEntity(fornecedorDto);
         Fornecedor saved = fornecedorRepository.save(fornecedor);
         return toDto(saved);
@@ -69,6 +75,7 @@ public class FornecedorServiceImpl implements FornecedorService {
         dto.setCep(fornecedor.getCep());
         dto.setRg(fornecedor.getRg());
         dto.setNascimento(fornecedor.getNascimento());
+
         return dto;
     }
 
@@ -80,6 +87,12 @@ public class FornecedorServiceImpl implements FornecedorService {
         fornecedor.setCep(dto.getCep());
         fornecedor.setRg(dto.getRg());
         fornecedor.setNascimento(dto.getNascimento());
+        // associate empresas if provided (will set the inverse side; for persistence we must update owning side)
+
         return fornecedor;
+    }
+
+    private boolean existsByDocumento(String documento) {
+        return fornecedorRepository.existsByDocumento(documento);
     }
 }
