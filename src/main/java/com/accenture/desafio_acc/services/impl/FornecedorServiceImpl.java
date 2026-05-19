@@ -38,6 +38,10 @@ public class FornecedorServiceImpl implements FornecedorService {
             throw new DocumentoExisteException("Erro: Documento (CPF/CNPJ) já consta na nossa base de dados.");
         }
 
+        if (existsByNome(fornecedorDto.getNome())) {
+            throw new NomeExisteException("Erro: Nome já consta na nossa base de dados.");
+        }
+
         if (normalizeDocumento(fornecedorDto.getDocumento()).length() == 11 && fornecedorDto.getRg().isEmpty()) {
             throw new RgVazioException("Erro: RG não pode ser vazio para pessoas fisicas.");
         }
@@ -119,6 +123,10 @@ public class FornecedorServiceImpl implements FornecedorService {
 
     private boolean existsByDocumento(String documento) {
         return fornecedorRepository.existsByDocumento(documento);
+    }
+
+    private boolean existsByNome(String nome) {
+        return fornecedorRepository.existsByNome(nome);
     }
 
     private String normalizeDocumento(String documento) {
