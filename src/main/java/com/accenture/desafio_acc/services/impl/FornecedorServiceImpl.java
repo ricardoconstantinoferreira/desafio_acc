@@ -1,12 +1,15 @@
 package com.accenture.desafio_acc.services.impl;
 
+import com.accenture.desafio_acc.config.ValidadorIdade;
 import com.accenture.desafio_acc.dto.FornecedorDto;
+import com.accenture.desafio_acc.dto.ViaCepResponse;
 import com.accenture.desafio_acc.entity.Fornecedor;
-import com.accenture.desafio_acc.exception.DocumentoExisteException;
+import com.accenture.desafio_acc.exception.*;
 import com.accenture.desafio_acc.repository.EmpresaRepository;
 import com.accenture.desafio_acc.repository.FornecedorRepository;
 import com.accenture.desafio_acc.services.FornecedorService;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestClient;
 
 import java.util.List;
 import java.util.Optional;
@@ -17,10 +20,15 @@ public class FornecedorServiceImpl implements FornecedorService {
 
     private final FornecedorRepository fornecedorRepository;
     private final EmpresaRepository empresaRepository;
+    private final RestClient restClient;
+    private static final String PARANA = "PR";
 
-    public FornecedorServiceImpl(FornecedorRepository fornecedorRepository, EmpresaRepository empresaRepository) {
+    public FornecedorServiceImpl(FornecedorRepository fornecedorRepository,
+                                 EmpresaRepository empresaRepository,
+                                 RestClient restClient) {
         this.fornecedorRepository = fornecedorRepository;
         this.empresaRepository = empresaRepository;
+        this.restClient = restClient;
     }
 
     @Override
@@ -28,6 +36,24 @@ public class FornecedorServiceImpl implements FornecedorService {
 
         if (existsByDocumento(fornecedorDto.getDocumento())) {
             throw new DocumentoExisteException("Erro: Documento (CPF/CNPJ) já consta na nossa base de dados.");
+        }
+
+        if (normalizeDocumento(fornecedorDto.getDocumento()).length() == 11 && fornecedorDto.getRg().isEmpty()) {
+            throw new RgVazioException("Erro: RG não pode ser vazio para pessoas fisicas.");
+        }
+
+        if (normalizeDocumento(fornecedorDto.getDocumento()).length() == 11 && fornecedorDto.getNascimento() == null) {
+            throw new NascimentoVazioException("Erro: Data de nascimento não pode ser vazia para pessoas fisicas.");
+        }
+
+        ViaCepResponse response = getCep(fornecedorDto.getCep());
+
+        if (response.erro() != null) {
+            throw new CepInvalidoException("Erro: CEP Inválido.");
+        }
+
+        if (response.uf().equals(PARANA) && !ValidadorIdade.isMaiorDeIdade(fornecedorDto.getNascimento())) {
+            throw new MenorIdadeException("Erro: Fornecedor do Paraná não pode ser menor de idade.");
         }
 
         Fornecedor fornecedor = toEntity(fornecedorDto);
@@ -87,12 +113,22 @@ public class FornecedorServiceImpl implements FornecedorService {
         fornecedor.setCep(dto.getCep());
         fornecedor.setRg(dto.getRg());
         fornecedor.setNascimento(dto.getNascimento());
-        // associate empresas if provided (will set the inverse side; for persistence we must update owning side)
 
         return fornecedor;
     }
 
     private boolean existsByDocumento(String documento) {
         return fornecedorRepository.existsByDocumento(documento);
+    }
+
+    private String normalizeDocumento(String documento) {
+        return documento.replaceAll("\\D", "");
+    }
+
+    private ViaCepResponse getCep(String cep) {
+        return restClient.get()
+                .uri("/{cep}/json/", cep)
+                .retrieve()
+                .body(ViaCepResponse.class);
     }
 }
