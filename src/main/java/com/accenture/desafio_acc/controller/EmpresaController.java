@@ -48,4 +48,11 @@ public class EmpresaController {
         empresaService.delete(id);
         return ResponseEntity.noContent().build();
     }
+
+    @PostMapping("/{id}/fornecedores")
+    public ResponseEntity<EmpresaDto> addFornecedores(@PathVariable("id") Long empresaId, @RequestBody java.util.Set<Long> fornecedorIds) {
+        EmpresaDto updated = empresaService.addFornecedores(empresaId, fornecedorIds);
+        if (updated == null) return ResponseEntity.notFound().build();
+        return ResponseEntity.ok(updated);
+    }
 }

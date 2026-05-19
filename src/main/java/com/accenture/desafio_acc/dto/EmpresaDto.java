@@ -1,8 +1,5 @@
 package com.accenture.desafio_acc.dto;
 
-import java.util.HashSet;
-import java.util.Set;
-
 public class EmpresaDto {
     private Long id;
     private String documento;

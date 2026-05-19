@@ -1,8 +1,6 @@
 package com.accenture.desafio_acc.dto;
 
 import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.Set;
 
 public class FornecedorDto {
     private Long id;
