@@ -62,24 +62,34 @@ O projeto consome `spring.datasource.*` via `application.properties` usando as v
 Base: `/api`
 
 - Empresas
-  - POST   `/api/empresas`                - criar empresa
-  - GET    `/api/empresas`                - listar empresas
-  - GET    `/api/empresas/{id}`           - obter por id
-  - PUT    `/api/empresas/{id}`           - atualizar
-  - DELETE `/api/empresas/{id}`           - excluir
-  - POST   `/api/empresas/{id}/fornecedores` - associar fornecedores (body: JSON array de ids de fornecedores)
+  - POST   `/api/empresas`                      - criar empresa
+  - GET    `/api/empresas`                      - listar empresas
+  - GET    `/api/empresas/{id}`                 - obter por id
+  - PUT    `/api/empresas/{id}`                 - atualizar
+  - DELETE `/api/empresas/{id}`                 - excluir
+  - POST   `/api/empresas/{id}/fornecedores`   - associar fornecedores (body: JSON array de ids de fornecedores)
+  - GET    `/api/empresas/{id}/fornecedores`   - listar todos os fornecedores vinculados a uma empresa
 
 - Fornecedores
   - POST   `/api/fornecedores`                 - criar fornecedor
-  - GET    `/api/fornecedores`                 - listar
+  - GET    `/api/fornecedores`                 - listar fornecedores
   - GET    `/api/fornecedores/{id}`            - obter por id
   - PUT    `/api/fornecedores/{id}`            - atualizar
   - DELETE `/api/fornecedores/{id}`            - excluir
-  - GET    `/api/fornecedores/search?nome=..`  - buscar por nome (parcial)
-  - GET    `/api/fornecedores/documento/{doc}` - buscar por documento
-  - POST   `/api/fornecedores/{id}/empresas`   - associar empresas ao fornecedor (body: JSON array de ids de empresas)
 
-Request/response usam DTOs (`EmpresaDto`, `FornecedorDto`) no pacote `com.accenture_desafio_acc.dto`.
+Request/response usam DTOs (`EmpresaDto`, `FornecedorDto`) no pacote `com.accenture.desafio_acc.dto`.
+
+## Exemplos rápidos
+- Associar fornecedores a uma empresa (POST):
+  - URL: `POST /api/empresas/5/fornecedores`
+  - Body: JSON array de ids (Content-Type: application/json)
+
+```json
+[1, 2, 3]
+```
+
+- Listar fornecedores vinculados a uma empresa (GET):
+  - URL: `GET /api/empresas/5/fornecedores`
 
 ## Observações úteis
 

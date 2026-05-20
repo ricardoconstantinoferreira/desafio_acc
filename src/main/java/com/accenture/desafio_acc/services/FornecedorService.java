@@ -10,6 +10,4 @@ public interface FornecedorService {
     FornecedorDto findById(Long id);
     FornecedorDto update(Long id, FornecedorDto fornecedorDto);
     void delete(Long id);
-    FornecedorDto findByNome(String nome);
-    FornecedorDto findByDocumento(String documento);
 }

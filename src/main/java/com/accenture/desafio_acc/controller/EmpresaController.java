@@ -1,6 +1,7 @@
 package com.accenture.desafio_acc.controller;
 
 import com.accenture.desafio_acc.dto.EmpresaDto;
+import com.accenture.desafio_acc.dto.FornecedorDto;
 import com.accenture.desafio_acc.services.EmpresaService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -54,5 +55,11 @@ public class EmpresaController {
         EmpresaDto updated = empresaService.addFornecedores(empresaId, fornecedorIds);
         if (updated == null) return ResponseEntity.notFound().build();
         return ResponseEntity.ok(updated);
+    }
+
+    @GetMapping("/{id}/fornecedores")
+    public ResponseEntity<List<FornecedorDto>> getFornecedoresByEmpresa(@PathVariable("id") Long empresaId) {
+        List<FornecedorDto> fornecedores = empresaService.findFornecedoresByEmpresaId(empresaId);
+        return ResponseEntity.ok(fornecedores);
     }
 }

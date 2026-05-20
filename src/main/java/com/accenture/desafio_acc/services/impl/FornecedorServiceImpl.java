@@ -141,14 +141,4 @@ public class FornecedorServiceImpl implements FornecedorService {
                 .retrieve()
                 .body(ViaCepResponse.class);
     }
-
-    @Override
-    public FornecedorDto findByDocumento(String documento) {
-        return fornecedorRepository.findByDocumento(documento).map(this::toDto).orElse(null);
-    }
-
-    @Override
-    public FornecedorDto findByNome(String nome) {
-        return fornecedorRepository.findByNome(nome).map(this::toDto).orElse(null);
-    }
 }

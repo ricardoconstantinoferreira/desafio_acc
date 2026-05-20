@@ -48,16 +48,4 @@ public class FornecedorController {
         fornecedorService.delete(id);
         return ResponseEntity.noContent().build();
     }
-
-    @GetMapping("/search/{nome}")
-    public ResponseEntity<FornecedorDto> searchByNome(@PathVariable("nome") String nome) {
-        return ResponseEntity.ok(fornecedorService.findByNome(nome));
-    }
-
-    @GetMapping("/documento/{documento}")
-    public ResponseEntity<FornecedorDto> getByDocumento(@PathVariable String documento) {
-        FornecedorDto dto = fornecedorService.findByDocumento(documento);
-        if (dto == null) return ResponseEntity.notFound().build();
-        return ResponseEntity.ok(dto);
-    }
 }

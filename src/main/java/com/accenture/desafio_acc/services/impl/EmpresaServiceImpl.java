@@ -1,6 +1,7 @@
 package com.accenture.desafio_acc.services.impl;
 
 import com.accenture.desafio_acc.dto.EmpresaDto;
+import com.accenture.desafio_acc.dto.FornecedorDto;
 import com.accenture.desafio_acc.entity.Empresa;
 import com.accenture.desafio_acc.entity.Fornecedor;
 import com.accenture.desafio_acc.exception.DocumentoExisteException;
@@ -86,6 +87,12 @@ public class EmpresaServiceImpl implements EmpresaService {
         return toDto(saved);
     }
 
+    @Override
+    public List<FornecedorDto> findFornecedoresByEmpresaId(Long empresaId) {
+        List<Fornecedor> fornecedores = fornecedorRepository.findAllByEmpresasId(empresaId);
+        return fornecedores.stream().map(this::toFornecedorDto).collect(Collectors.toList());
+    }
+
     private EmpresaDto toDto(Empresa empresa) {
         EmpresaDto dto = new EmpresaDto();
         dto.setId(empresa.getId());
@@ -102,5 +109,17 @@ public class EmpresaServiceImpl implements EmpresaService {
         empresa.setCep(dto.getCep());
 
         return empresa;
+    }
+
+    private FornecedorDto toFornecedorDto(Fornecedor fornecedor) {
+        FornecedorDto dto = new FornecedorDto();
+        dto.setId(fornecedor.getId());
+        dto.setDocumento(fornecedor.getDocumento());
+        dto.setNome(fornecedor.getNome());
+        dto.setEmail(fornecedor.getEmail());
+        dto.setCep(fornecedor.getCep());
+        dto.setRg(fornecedor.getRg());
+        dto.setNascimento(fornecedor.getNascimento());
+        return dto;
     }
 }

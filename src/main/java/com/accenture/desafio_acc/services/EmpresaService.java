@@ -1,6 +1,7 @@
 package com.accenture.desafio_acc.services;
 
 import com.accenture.desafio_acc.dto.EmpresaDto;
+import com.accenture.desafio_acc.dto.FornecedorDto;
 
 import java.util.List;
 import java.util.Set;
@@ -13,4 +14,5 @@ public interface EmpresaService {
     void delete(Long id);
     boolean existsByDocumento(String documento);
     EmpresaDto addFornecedores(Long empresaId, Set<Long> fornecedorIds);
+    List<FornecedorDto> findFornecedoresByEmpresaId(Long empresaId);
 }
