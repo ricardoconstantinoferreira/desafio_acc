@@ -56,7 +56,9 @@ public class FornecedorServiceImpl implements FornecedorService {
             throw new CepInvalidoException("Erro: CEP Inválido.");
         }
 
-        if (response.uf().equals(PARANA) && !ValidadorIdade.isMaiorDeIdade(fornecedorDto.getNascimento())) {
+        if (response.uf().equals(PARANA) &&
+                normalizeDocumento(fornecedorDto.getDocumento()).length() == 11 &&
+                !ValidadorIdade.isMaiorDeIdade(fornecedorDto.getNascimento())) {
             throw new MenorIdadeException("Erro: Fornecedor do Paraná não pode ser menor de idade.");
         }
 
