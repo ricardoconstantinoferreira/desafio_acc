@@ -63,18 +63,85 @@ Base: `/api`
 
 - Empresas
   - POST   `/api/empresas`                      - criar empresa
+    - Body (JSON):
+      {
+        "documento": "string",   // CNPJ (obrigatório)
+        "fantasia": "string",    // nome fantasia (obrigatório)
+        "cep": "string"          // CEP (obrigatório)
+      }
+    - Exemplo:
+
+    ```json
+    {
+      "documento": "12345678000199",
+      "fantasia": "Empresa Exemplo Ltda",
+      "cep": "01001000"
+    }
+    ```
+
   - GET    `/api/empresas`                      - listar empresas
   - GET    `/api/empresas/{id}`                 - obter por id
   - PUT    `/api/empresas/{id}`                 - atualizar
+    - Body (JSON): mesmo formato do POST (documento, fantasia, cep). Exemplo:
+
+    ```json
+    {
+      "documento": "12345678000199",
+      "fantasia": "Empresa Atualizada Ltda",
+      "cep": "01002000"
+    }
+    ```
+
   - DELETE `/api/empresas/{id}`                 - excluir
   - POST   `/api/empresas/{id}/fornecedores`   - associar fornecedores (body: JSON array de ids de fornecedores)
+    - Body (JSON): array de ids (Long). Exemplo:
+
+    ```json
+    [1, 2, 3]
+    ```
+
   - GET    `/api/empresas/{id}/fornecedores`   - listar todos os fornecedores vinculados a uma empresa
 
 - Fornecedores
   - POST   `/api/fornecedores`                 - criar fornecedor
+    - Body (JSON):
+      {
+        "documento": "string",   // CPF ou CNPJ (obrigatório)
+        "nome": "string",        // nome ou razão social (obrigatório)
+        "email": "string",       // email (obrigatório)
+        "cep": "string",         // CEP (obrigatório)
+        "rg": "string",          // RG (opcional)
+        "nascimento": "YYYY-MM-DD" // data (opcional)
+      }
+    - Exemplo:
+
+    ```json
+    {
+      "documento": "12345678901",
+      "nome": "Fulano de Tal",
+      "email": "fulano@example.com",
+      "cep": "01001000",
+      "rg": "1234567",
+      "nascimento": "1980-01-01"
+    }
+    ```
+
   - GET    `/api/fornecedores`                 - listar fornecedores
   - GET    `/api/fornecedores/{id}`            - obter por id
   - PUT    `/api/fornecedores/{id}`            - atualizar
+    - Body (JSON): mesmo formato do POST (documento, nome, email, cep, rg opcional, nascimento opcional). Exemplo:
+
+    ```json
+    {
+      "documento": "12345678901",
+      "nome": "Fulano Atualizado",
+      "email": "fulano.updated@example.com",
+      "cep": "01002000",
+      "rg": "1234567",
+      "nascimento": "1980-01-01"
+    }
+    ```
+
   - DELETE `/api/fornecedores/{id}`            - excluir
 
 Request/response usam DTOs (`EmpresaDto`, `FornecedorDto`) no pacote `com.accenture.desafio_acc.dto`.
